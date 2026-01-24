@@ -1,0 +1,119 @@
+section .data
+    hmsg db 10, "Enter a four digit Hex Number: "
+    hmsg_len equ $-hmsg
+    ebmsg db 10, "The equivalent BCD Number: "
+    ebmsg_len equ $-ebmsg
+    ermsg db 10, "INVALID NUMBER INPUT", 10
+    ermsg_len equ $-ermsg
+
+section .bss
+    buf resb 5
+    char_ans resb 1
+
+%macro Print 2
+    mov 	rax, 1
+    mov 	rdi, 1
+    mov 	rsi, %1
+    mov 	rdx, %2
+    syscall
+%endmacro
+
+%macro Read 2
+    mov 	rax, 0
+    mov 	rdi, 0
+    mov 	rsi, %1
+    mov 	rdx, %2
+    syscall
+%endmacro
+
+%macro Exit 0
+    ; Print nline, nline_len
+    mov 	rax, 60
+    xor 	rdi, rdi
+    syscall
+%endmacro
+;----------------------------------------------------------------------------------------------
+
+section .text
+    global _start
+
+_start:
+    call HEX_BCD
+
+HEX_BCD:
+    Print hmsg, hmsg_len    
+    call Accept_16         		 ; accept 4 digit hex number
+    mov 	ax, bx              ; move hex number into ax
+
+    mov 	bx, 10              ; for dividing hex number by 10
+    xor 	bp, bp              ; counter
+
+back:
+    xor 	dx, dx            		  ; clear dx for remainder
+    div 	bx                 		  ; divide ax by 10 (ax = Q, dx = R)
+    push	 dx                		 ; push remainder onto stack as BCD
+    inc 	bp                 		 ; increment counter
+
+    cmp ax, 0
+    jne back
+
+    Print ebmsg, ebmsg_len
+
+back1:
+    pop 	dx                 
+    add 	dl, 30h             
+    mov 	[char_ans], dl
+    Print char_ans, 1       
+
+    dec 	bp                 
+    jnz 	back1              
+    ret
+;-------------------------------------------------------------------------------------------------
+
+Accept_16:                 ; ASCII (character) to hex number input
+    Read buf, 5
+
+    mov 	rcx, 4              
+    mov 	rsi, buf           ;store base address into RSI 
+    xor 	bx, bx              
+
+next_byte:
+    shl 	bx, 4              
+    mov 	al, [rsi]          
+    cmp 	al, '0'
+    jb 	error
+    cmp 	al, '9'
+    jbe 	sub30
+
+    cmp 	al, 'A'
+    jb 	error
+    cmp 	al, 'F'
+    jbe 	sub37
+
+    cmp 	al, 'a'
+    jb 	error
+    cmp 	al, 'f'
+    jbe 	sub57
+
+error:
+    Print ermsg, ermsg_len
+    Exit
+
+sub57:
+    sub 	al, 20H
+    jmp 	add_to_bx
+sub37:
+    sub 	al, 07H
+    jmp 	add_to_bx
+sub30:
+    sub 	al, 30H
+
+add_to_bx:
+    add 	bx, ax              ; accumulate hex value
+
+    inc 	rsi                 ; move to next character
+    dec 	rcx                 ; decrement character count
+    jnz 	next_byte           ; repeat until all hex digits are processed
+
+    ret
+

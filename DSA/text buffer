@@ -1,0 +1,86 @@
+#include &lt;iostream&gt;
+using namespace std;
+
+struct link {
+string word;
+link *next;
+link *prev;
+};
+
+class text_buffer {
+public:
+link *head, *tail;
+void buffer(){
+head=tail=NULL;
+
+}
+void append(string word) {
+link *newnode = new link();
+newnode-&gt;word = word;
+newnode-&gt;next = NULL;
+newnode-&gt;prev = tail;
+
+if (head == NULL) {
+head = tail = newnode;
+} else {
+tail-&gt;next = newnode;
+tail = newnode;
+}
+
+}
+
+void display() const {
+link *temp = head;
+while (temp != NULL) {
+cout &lt;&lt; temp-&gt;word &lt;&lt; &quot; &quot;&lt;&lt;endl;
+temp = temp-&gt;next;
+}
+cout &lt;&lt; endl;
+}
+
+void remove(string w) {
+link *cur = head;
+while (cur != NULL) {
+if (cur-&gt;word == w) {
+if (cur-&gt;prev != NULL) {
+cur-&gt;prev-&gt;next = cur-&gt;next;
+} else {
+head = cur-&gt;next;
+}
+
+if (cur-&gt;next != NULL) {
+cur-&gt;next-&gt;prev = cur-&gt;prev;
+} else {
+tail = cur-&gt;prev;
+}
+
+link *remove = cur;
+cur = cur-&gt;next;
+
+delete remove;
+}
+else {
+cur = cur-&gt;next;
+}
+}
+}
+};
+
+int main() {
+text_buffer tb;
+tb.append(&quot;yash&quot;);
+tb.append(&quot;mahajan&quot;);
+tb.append(&quot;ruturaj&quot;);
+tb.append(&quot;warkard&quot;);
+tb.append(&quot;vivik&quot;);
+tb.append(&quot;painjane&quot;);
+tb.append(&quot;vivik&quot;);
+tb.append(&quot;walunj&quot;);
+tb.append(&quot;shivprasad&quot;);
+tb.append(&quot;pranil&quot;);
+tb.display();
+tb.remove(&quot;yash&quot;);
+tb.display();
+
+return 0;
+}

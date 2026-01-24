@@ -1,0 +1,67 @@
+#include &lt;iostream&gt;
+
+using namespace std;
+
+void addPoly(int poly1[], int size1, int poly2[], int size2, int result[], int
+resultSize) {
+for (int i = 0; i &lt; resultSize; i++) {
+result[i] = 0;
+}
+
+for (int i = 0; i &lt; size1; i++) {
+result[i] += poly1[i];
+}
+
+for (int i = 0; i &lt; size2; i++) {
+result[i] += poly2[i];
+}
+}
+
+void subPoly(int poly1[], int size1, int poly2[], int size2, int result[], int
+resultSize) {
+for (int i = 0; i &lt; resultSize; i++) {
+result[i] = 0;
+}
+
+for (int i = 0; i &lt; size1; i++) {
+result[i] += poly1[i];
+}
+
+for (int i = 0; i &lt; size2; i++) {
+result[i] -= poly2[i];
+}
+}
+
+void printPoly(int poly[], int size) {
+for (int i = 0; i &lt; size; i++) {
+if (i != 0 &amp;&amp; poly[i] &gt; 0) {
+cout &lt;&lt; &quot;+&quot;;
+}
+if (poly[i] != 0) {
+cout &lt;&lt; poly[i] &lt;&lt; &quot;x^&quot; &lt;&lt; i &lt;&lt; &quot; &quot;;
+}
+}
+cout &lt;&lt; endl;
+}
+
+int main() {
+int poly1[] = {3, -8, 5, 3}; // Polynomial: 3 - 8x + 5x^2 + 3x^3
+int size1 = sizeof(poly1) / sizeof(poly1[0]);
+
+int poly2[] = {1, 2, 4}; // Polynomial: 1 + 2x + 4x^2
+
+int size2 = sizeof(poly2) / sizeof(poly2[0]);
+
+int resultSize = max(size1, size2);
+int result[resultSize] = {0};
+
+addPoly(poly1, size1, poly2, size2, result, resultSize);
+cout &lt;&lt; &quot;Sum of polynomials: &quot;;
+printPoly(result, resultSize);
+
+subPoly(poly1, size1, poly2, size2, result, resultSize);
+cout &lt;&lt; &quot;Difference of polynomials: &quot;;
+printPoly(result, resultSize);
+
+return 0;
+}

@@ -1,0 +1,140 @@
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+struct Node {
+Node *next;
+string val;
+};
+
+class Stack {
+private:
+Node *top;
+
+public:
+Stack() : top(nullptr) {}
+
+bool isEmpty() {
+return top == nullptr;
+}
+
+void push(string v) {
+Node *nn = new Node;
+nn-&gt;val = v;
+nn-&gt;next = top;
+top = nn;
+
+}
+
+string pop() {
+if (isEmpty()) {
+cout &lt;&lt; &quot;Nothing is present&quot; &lt;&lt; endl;
+return &quot;&quot;;
+}
+string s = top-&gt;val;
+Node *temp = top;
+top = top-&gt;next;
+delete temp;
+return s;
+}
+
+void display() {
+if (isEmpty()) {
+cout &lt;&lt; &quot;Stack is empty&quot; &lt;&lt; endl;
+return;
+}
+Node *temp = top;
+while (temp != nullptr) {
+cout &lt;&lt; temp-&gt;val &lt;&lt; &quot; &quot;;
+temp = temp-&gt;next;
+}
+cout &lt;&lt; endl;
+}
+
+};
+
+class WebBrowser {
+private:
+Stack mainStack;
+Stack tempStack;
+string current;
+
+public:
+void add(string web) {
+if (!current.empty()) {
+mainStack.push(current);
+}
+current = web;
+while (!tempStack.isEmpty()) {
+tempStack.pop();
+}
+}
+
+void navigateBack() {
+if (mainStack.isEmpty()) {
+cout &lt;&lt; &quot;No webs to navigate back to.&quot; &lt;&lt; endl;
+return;
+}
+tempStack.push(current);
+current = mainStack.pop();
+
+}
+
+void navigateForward() {
+if (tempStack.isEmpty()) {
+cout &lt;&lt; &quot;No webs to navigate forward to.&quot; &lt;&lt; endl;
+return;
+}
+mainStack.push(current);
+current = tempStack.pop();
+}
+
+void displayCurrent() {
+if (current.empty()) {
+cout &lt;&lt; &quot;No current web.&quot; &lt;&lt; endl;
+return;
+}
+cout &lt;&lt; &quot;Current web: &quot; &lt;&lt; current &lt;&lt; endl;
+}
+};
+
+int main() {
+Stack s;
+WebBrowser w;
+s.push(&quot;www.amazon.in&quot;);
+s.push(&quot;www.flipkart.com&quot;);
+s.push(&quot;www.instagram.com&quot;);
+
+s.push(&quot;www.snapchat.in&quot;);
+
+cout &lt;&lt; &quot;Current Stack: &quot;;
+s.display();
+
+cout &lt;&lt; &quot;Popped: &quot; &lt;&lt; s.pop() &lt;&lt; s.pop() &lt;&lt; s.pop() &lt;&lt; s.pop() &lt;&lt;
+endl;
+
+cout &lt;&lt; &quot;Stack after pop: &quot;;
+s.display();
+
+w.add(&quot;www.amazon.in&quot;);
+w.add(&quot;www.flipkart.com&quot;);
+w.add(&quot;www.instagram.com&quot;);
+w.add(&quot;www.snapchat.in&quot;);
+
+w.displayCurrent();
+cout&lt;&lt;&quot;navigateBack&quot;&lt;&lt;endl;
+w.navigateBack();
+w.displayCurrent();
+cout&lt;&lt;&quot;navigateBack&quot;&lt;&lt;endl;
+w.navigateBack();
+w.displayCurrent();
+cout&lt;&lt;&quot;navigateforward&quot;&lt;&lt;endl;
+w.navigateForward();
+w.displayCurrent();
+
+cout&lt;&lt;&quot;navigateforward&quot;&lt;&lt;endl;
+w.navigateForward();
+w.displayCurrent();
+
+return 0;
+}

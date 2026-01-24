@@ -1,0 +1,93 @@
+#include &lt;iostream&gt;
+#include &lt;climits&gt;
+
+using namespace std;
+
+template&lt;class T&gt;
+class stack {
+T *A;
+int top;
+int size;
+
+public:
+stack(int n = 5) {
+A = new T[n];
+if (!A) return;
+top = -1;
+size = n;
+}
+
+void push(T ele) {
+if (top == size - 1)
+return;
+A[++top] = ele;
+}
+
+T pop() {
+return A[top--];
+}
+
+bool isFull() {
+return top == size - 1;
+}
+
+bool isEmpty() {
+return top == -1;
+}
+};
+
+class Polynomial {
+public:
+void evaluate() {
+stack&lt;float&gt; s(100);
+char c;
+float result = 0;
+float n = 0;
+
+while (cin &gt;&gt; c &amp;&amp; c != &#39;=&#39;) {
+cout &lt;&lt; c &lt;&lt; endl;
+
+if (isdigit(c)) {
+n = (n * 10) + (c - &#39;0&#39;);
+} else if (c == &#39; &#39;) {
+if (n != 0) {
+s.push(n);
+n = 0;
+}
+} else {
+
+if (n != 0) {
+s.push(n);
+n = 0;
+}
+
+float operand_2 = s.pop();
+float operand_1 = s.pop();
+
+switch (c) {
+case &#39;+&#39;:
+result = operand_1 + operand_2;
+break;
+case &#39;-&#39;:
+result = operand_1 - operand_2;
+break;
+case &#39;*&#39;:
+result = operand_1 * operand_2;
+break;
+case &#39;/&#39;:
+result = operand_1 / operand_2;
+break;
+}
+
+s.push(result);
+}
+}
+}
+};
+
+int main() {
+Polynomial poly;
+poly.evaluate();
+
+return 0;
+}

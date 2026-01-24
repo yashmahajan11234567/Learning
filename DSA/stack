@@ -1,0 +1,134 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node {
+    Node *next;
+    string val;
+};
+
+class Stack {
+private:
+    Node *top;
+
+public:
+    Stack() : top(nullptr) {}
+
+    bool isEmpty() {
+        return top == nullptr;
+    }
+
+    void push(string v) {
+        Node *nn = new Node;
+        nn->val = v; 
+        nn->next = top;
+        top = nn;
+    }
+
+    string pop() {
+        if (isEmpty()) {
+            cout << "Nothing is present" << endl;
+            return "";
+        }
+        string s = top->val;
+        Node *temp = top;
+        top = top->next;
+        delete temp; 
+        return s;
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Stack is empty" << endl;
+            return;
+        }
+        Node *temp = top;
+        while (temp != nullptr) { 
+            cout << temp->val << "  ";
+            temp = temp->next;
+        }
+        cout << endl; 
+    }
+};
+
+class WebBrowser {
+private:
+    Stack mainStack;  
+    Stack tempStack;   
+    string current; 
+
+public:
+    void add(string web) {
+        if (!current.empty()) {
+            mainStack.push(current); 
+        }
+        current = web; 
+        while (!tempStack.isEmpty()) { 
+            tempStack.pop();
+        }
+    }
+
+    void navigateBack() {
+        if (mainStack.isEmpty()) {
+            cout << "No webs to navigate back to." << endl;
+            return;
+        }
+        tempStack.push(current); 
+        current = mainStack.pop(); 
+    }
+
+    void navigateForward() {
+        if (tempStack.isEmpty()) {
+            cout << "No webs to navigate forward to." << endl;
+            return;
+        }
+        mainStack.push(current); 
+        current = tempStack.pop();
+    }
+
+    void displayCurrent() {
+        if (current.empty()) {
+            cout << "No current web." << endl;
+            return;
+        }
+        cout << "Current web: " << current << endl;
+    }
+};
+
+int main() {
+   	Stack s;
+   	WebBrowser w;
+    	s.push("www.amazon.in");
+   	s.push("www.flipkart.com");
+    	s.push("www.instagram.com");
+   	s.push("www.snapchat.in");
+    
+   	cout << "Current Stack: ";
+   	s.display();
+    
+    	cout << "Popped: " << s.pop() << s.pop() << s.pop() << s.pop() << endl;
+    
+    	cout << "Stack after pop: ";
+    	s.display();
+
+    	w.add("www.amazon.in");
+    	w.add("www.flipkart.com");
+    	w.add("www.instagram.com");
+    	w.add("www.snapchat.in");
+
+    	w.displayCurrent(); 
+	cout<<"navigateBack"<<endl;
+    	w.navigateBack();
+    	w.displayCurrent(); 
+	cout<<"navigateBack"<<endl;
+    	w.navigateBack();
+    	w.displayCurrent(); 
+	cout<<"navigateforward"<<endl;
+    	w.navigateForward();
+    	w.displayCurrent(); 
+	cout<<"navigateforward"<<endl;
+    	w.navigateForward();
+    	w.displayCurrent(); 
+
+    	return 0;
+}

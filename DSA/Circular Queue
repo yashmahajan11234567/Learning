@@ -1,0 +1,129 @@
+#include &lt;iostream&gt;
+using namespace std;
+
+struct Node {
+string name;
+long int phone_no;
+int num;
+Node* next;
+};
+
+class CircularQueue {
+private:
+Node* front;
+Node* rear;
+int maxSize;
+int currentSize;
+
+public:
+CircularQueue(int size) : maxSize(size), currentSize(0) {
+front = rear = nullptr;
+}
+
+bool isEmpty() {
+return currentSize == 0;
+}
+
+bool isFull() {
+return currentSize == maxSize;
+
+}
+
+void enqueue(string n, long int ph, int p) {
+if (isFull()) {
+cout &lt;&lt; &quot;Queue is full. Cannot add customer: &quot; &lt;&lt; n &lt;&lt; endl;
+return;
+}
+
+Node* nn = new Node;
+nn-&gt;name = n;
+nn-&gt;phone_no = ph;
+nn-&gt;num = p;
+nn-&gt;next = nullptr;
+
+if (isEmpty()) {
+front = rear = nn;
+rear-&gt;next = front; // Circular link
+} else {
+rear-&gt;next = nn;
+rear = nn;
+rear-&gt;next = front; // Maintain circular link
+}
+
+currentSize++;
+cout &lt;&lt; &quot;Customer added to the queue: &quot; &lt;&lt; n &lt;&lt; endl;
+}
+
+void dequeue() {
+if (isEmpty()) {
+
+cout &lt;&lt; &quot;Queue is empty. No customers to check out.&quot; &lt;&lt; endl;
+return;
+}
+
+Node* temp = front;
+cout &lt;&lt; &quot;Customer checking out: &quot; &lt;&lt; front-&gt;name &lt;&lt; &quot; (Phone: &quot; &lt;&lt; front-
+&gt;phone_no
+&lt;&lt; &quot;, People: &quot; &lt;&lt; front-&gt;num &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+
+if (front == rear) { // Only one node
+front = rear = nullptr;
+} else {
+front = front-&gt;next;
+rear-&gt;next = front; // Update circular link
+}
+
+delete temp;
+currentSize--;
+}
+
+void display() {
+if (isEmpty()) {
+cout &lt;&lt; &quot;Queue is empty.&quot; &lt;&lt; endl;
+return;
+}
+
+Node* temp = front;
+cout &lt;&lt; &quot;Current queue:&quot; &lt;&lt; endl;
+do {
+
+cout &lt;&lt; &quot;Name: &quot; &lt;&lt; temp-&gt;name &lt;&lt; &quot;, Phone: &quot; &lt;&lt; temp-&gt;phone_no &lt;&lt; &quot;,
+People: &quot; &lt;&lt; temp-&gt;num &lt;&lt; endl;
+temp = temp-&gt;next;
+} while (temp != front);
+}
+};
+
+int main() {
+CircularQueue queue(3); // Set maximum size internally
+int choice;
+
+do {
+cout &lt;&lt; &quot;\n1. Customer arrival\n2. Customer checkout\n3. View customers\n4.
+Exit\n&quot;;
+cout &lt;&lt; &quot;Enter your choice: &quot;;
+cin &gt;&gt; choice;
+
+if (choice == 1) {
+string name;
+long int phoneNo;
+int numPeople;
+cout &lt;&lt; &quot;Enter Customer name: &quot;;
+cin &gt;&gt; name;
+cout &lt;&lt; &quot;Enter Phone number: &quot;;
+cin &gt;&gt; phoneNo;
+cout &lt;&lt; &quot;Enter number of people: &quot;;
+cin &gt;&gt; numPeople;
+
+queue.enqueue(name, phoneNo, numPeople);
+} else if (choice == 2) {
+
+queue.dequeue();
+} else if (choice == 3) {
+queue.display();
+}
+
+} while (choice != 4);
+
+return 0;
+}

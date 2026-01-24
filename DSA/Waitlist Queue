@@ -1,0 +1,117 @@
+#include &lt;iostream&gt;
+using namespace std;
+
+struct node {
+string name;
+int num;
+long int phone_no;
+node* next;
+};
+
+class queue {
+private:
+node* front;
+node* rear;
+
+public:
+queue() {
+front = NULL;
+rear = NULL;
+}
+
+bool isempty() {
+return front == NULL;
+}
+
+void enqueue(string n, long int ph, int p) {
+node* nn = new node;
+if (!nn) {
+
+return;
+}
+
+nn-&gt;name = n;
+nn-&gt;phone_no = ph;
+nn-&gt;num = p;
+nn-&gt;next = NULL;
+
+if (isempty()) {
+front = rear = nn;
+} else {
+rear-&gt;next = nn;
+rear = nn;
+}
+
+cout &lt;&lt; &quot;You are added to the waitlist: &quot; &lt;&lt; n &lt;&lt; endl;
+}
+
+void dequeue() {
+if (isempty()) {
+cout &lt;&lt; &quot;Waitlist is empty.&quot; &lt;&lt; endl;
+return;
+
+}
+
+node* temp = front;
+cout &lt;&lt; &quot;Seating Customer: &quot; &lt;&lt; front-&gt;name &lt;&lt; &quot; (Phone: &quot; &lt;&lt;
+front-&gt;phone_no
+&lt;&lt; &quot;, People: &quot; &lt;&lt; front-&gt;num &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+
+front = front-&gt;next;
+delete temp;
+
+if (isempty()) {
+rear = NULL;
+}
+}
+
+void display() {
+if (isempty()) {
+cout &lt;&lt; &quot;Waitlist is empty.&quot; &lt;&lt; endl;
+return;
+}
+
+node* temp = front;
+cout &lt;&lt; &quot;Current waitlist:&quot; &lt;&lt; endl;
+while (temp != NULL) {
+cout &lt;&lt; &quot;Name: &quot; &lt;&lt; temp-&gt;name ;
+cout &lt;&lt; &quot;, Phone: &quot; &lt;&lt; temp-&gt;phone_no ;
+
+cout &lt;&lt; &quot;, People: &quot; &lt;&lt; temp-&gt;num &lt;&lt; endl;
+temp = temp-&gt;next;
+}
+}
+};
+
+int main() {
+queue waitlist;
+int choice;
+
+do {
+cout &lt;&lt; &quot;\n1. Add Customer to waitlist\n2. Seat customer\n3.
+Display waitlist\n4. Exit\n&quot;;
+cout &lt;&lt; &quot;Enter your choice: &quot;;
+cin &gt;&gt; choice;
+
+if (choice == 1) {
+string name;
+long int phoneNo;
+int numPeople;
+cout &lt;&lt; &quot;Enter Customer name: &quot;;
+cin &gt;&gt; name;
+cout &lt;&lt; &quot;Enter Phone number: &quot;;
+cin &gt;&gt; phoneNo;
+cout &lt;&lt; &quot;Enter number of people: &quot;;
+cin &gt;&gt; numPeople;
+
+waitlist.enqueue(name, phoneNo, numPeople);
+} else if (choice == 2) {
+waitlist.dequeue();
+} else if (choice == 3) {
+waitlist.display();
+}
+
+} while (choice != 4);
+
+return 0;
+}

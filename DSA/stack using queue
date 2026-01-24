@@ -1,0 +1,95 @@
+#include <iostream>
+using namespace std;
+
+struct node {
+	int data;
+	node* next;
+};
+
+class queue {
+private:
+	node* front;
+	node* rear;
+
+public:
+	queue() {
+	front = rear = NULL;
+	}
+
+	bool isempty() {
+     	return front == NULL;
+    	}
+
+    	void enqueue(int k) {
+        	node* nn = new node;
+        	nn->data = k;
+        	nn->next = NULL;
+        	if (isempty()) {
+            		front = rear = nn;
+        	} 
+        	else {
+            		rear->next = nn;
+            		rear = nn;
+        	}
+   	 }
+
+  	int dequeue() {
+        	if (isempty()) {
+           	return -1;
+        	}
+        	node* temp = front;
+        	int data = front->data;
+        	front = front->next;
+        	delete temp;
+
+        	if (isempty()) {
+            		rear = NULL;
+        	}
+
+        return data;
+    }
+};
+
+class Stackusingqueues {
+private:
+    queue Q1,Q2;
+
+public:
+	void push(int k) {
+        	while (!Q1.isempty()) {
+            		Q2.enqueue(Q1.dequeue());
+        }
+
+        	Q1.enqueue(k);
+
+        	while (!Q2.isempty()) {
+        		Q1.enqueue(Q2.dequeue());
+        	}
+    	}
+
+    	int pop() {
+        	if (Q1.isempty()) {
+            		cout << "Stack is empty" << endl;
+            	return -1;
+        	}
+        	return Q1.dequeue();
+    	}
+
+    	bool isempty() {
+        	return Q1.isempty();
+    	}
+};
+
+int main() {
+    	Stackyusingqueues s;
+    	s.push(10);
+    	s.push(20);
+    	s.push(30);
+    	cout << s.pop() << endl;
+    	cout << s.pop() << endl;
+    	cout << s.pop() << endl;
+
+    return 0;
+}
+
+ 
